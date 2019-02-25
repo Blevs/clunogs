@@ -1,0 +1,105 @@
+*  clunogs 
+  [[https://clojars.org/clunogs][file:https://img.shields.io/clojars/v/clunogs.svg]]
+
+  A simple, single namespace Clojure library to wrap the [[https://rapidapi.com/unogs/api/unogs][uNoGS]] API to enable easy
+  access to Netflix information.
+
+  [[./logo.png]]
+
+** Latest version
+   The latest release version of the clunogs library is hosted on [[https://clojars.org/clunogs][Clojars]].
+   
+   Leiningen and Boot
+   #+BEGIN_EXAMPLE
+   [clunogs "0.1.0"]
+   #+END_EXAMPLE
+
+   deps.edn
+   #+BEGIN_EXAMPLE
+   clunogs {:mvn/version "0.1.0"}
+   #+END_EXAMPLE
+
+** Basic Usage
+   Require the package:
+   #+BEGIN_SRC clojure :results none
+     (ns example
+       (:require [clunogs.core :as clunogs]))
+   #+END_SRC
+
+   You can specify your API key and make a request in one of three ways.
+
+   Pass your API key as a keyword argument to the request function:
+   #+BEGIN_SRC clojure :results output
+     (clunogs/new-releases 1 "US" :api-key "secret-key")
+   #+END_SRC
+   
+   #+RESULTS:
+   #+begin_example
+   {:cached nil,
+    :request-time 837,
+    :repeatable? false,
+    :protocol-version {:name "HTTP", :major 1, :minor 1},
+    :streaming? true,
+    :http-client
+    #object[org.apache.http.impl.client.InternalHttpClient 0xd59490a "org.apache.http.impl.client.InternalHttpClient@d59490a"],
+    :chunked? false,
+    :reason-phrase "OK",
+    :headers
+    {:access-control-allow-origin "*",
+     :content-type "application/json; charset=ISO-8859-1",
+     :date "Fri, 22 Feb 2019 23:22:10 GMT",
+     :server "RapidAPI-1.0.6",
+     :x-ratelimit-requests-limit "100",
+     :x-ratelimit-requests-remaining "84",
+     :content-length "4189",
+     :connection "Close"},
+    :orig-content-encoding nil,
+    :status 200,
+    :length 4189,
+    :body
+    {:count "1",
+     :items
+     [{:largeimage "",
+       :type "movie",
+       :title "Trespass Against Us",
+       :released "2016",
+       :runtime "1h39m",
+       :image
+       "https://occ-0-3451-3446.1.nflxso.net/art/8ad00/bc36395deb410871cda447f046ac7c1aed28ad00.jpg",
+       :unogsdate "2019-02-22",
+       :synopsis
+       "A man from a criminal family yearns to break away and find a better life, but his father's staunch opposition puts his dreams of freedom in jeopardy.",
+       :download "0",
+       :imdbid "tt3305308",
+       :rating "5.8",
+       :netflixid "80057509"}]},
+    :trace-redirects []}
+   #+end_example
+   
+   Set the API key globally:
+   #+BEGIN_SRC clojure :results none
+     (clunogs/set-api-key "secret-key")
+     (clunogs/new-releases 1 "US")
+   #+END_SRC
+
+   Set the API key via the headers using the ~with-headers~ macro:
+   #+BEGIN_SRC clojure :results none
+     (clunogs/with-headers
+       {:accept "application/json"
+        :x-rapidapi-key "secret-key"}
+        (clunogs/new-releases 1 "US"))
+   #+END_SRC
+   
+   All three method practically equivalent. This library is not opinionated
+   and allows you to use what best fits your use case. However, an API key
+   passed as an argument will overwrite a value set by the macro or globally.
+
+** Documentation
+   For more information, please see the [[https://blevs.github.com/clunogs/docs.html][Using clunogs]] with samples for all
+   requests as well as the complete [[https://blevs.github.com/clunogs/clunogs.core.html][namespace documentation]].
+
+** License
+   Copyright © 2019 Henry Blevins
+
+   Distributed under the Eclipse Public License either version 1.0 or (at
+   your option) any later version.
